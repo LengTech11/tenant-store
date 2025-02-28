@@ -7,9 +7,10 @@ class PaymentsController < ApplicationController
     @create_transaction_params = {
       req_time: Time.zone.now.strftime("%Y%m%d%H%M%S"),
       merchant_id: "hangmeasmobile",
-      tran_id: "lengTech11",
-      amount: "999",
-      payment_option: "abapay"
+      tran_id: "sokleng",
+      amount: "99",
+      payment_option: "abapay",
+      continue_success_url: success_url(tran_id)
     }
 
     hash_data = @create_transaction_params.slice(
@@ -22,7 +23,7 @@ class PaymentsController < ApplicationController
 
     public_key = "ecb49bf5-9537-424d-8745-891e47e0813a"
 
-    hash_data = @create_transaction_params.slice(:req_time, :merchant_id, :tran_id, :amount, :payment_option).values.join("")
+    hash_data = @create_transaction_params.slice(:req_time, :merchant_id, :tran_id, :amount, :payment_option, :continue_success_url).values.join("")
     hash = Base64.strict_encode64(OpenSSL::HMAC.digest(OpenSSL::Digest.new("sha512"), public_key, hash_data))
 
     @create_transaction_params[:hash] = hash
@@ -49,7 +50,7 @@ class PaymentsController < ApplicationController
   private
 
   def merchant_id
-    ENV["MERCHANT_ID"] || "LengTechShop"
+    ENV["MERCHANT_ID"] || "hangmeasmobile"
   end
 
   def public_key
